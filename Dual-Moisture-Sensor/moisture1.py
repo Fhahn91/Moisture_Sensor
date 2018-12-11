@@ -2,7 +2,7 @@
 
 # Importing libraries to be used.
 
-import Rpi.GPIO as GPIO # A Rasp. Pi GPIO pin library
+import RPi.GPIO as GPIO # A Rasp. Pi GPIO pin library
 import smtplib # To send emails from the Rasp. Pi
 import time # Standard time library
 
@@ -11,51 +11,70 @@ GPIO.setmode(GPIO.BCM)
 
 # Defining Channels used
 sensor_One = 17
-#sensor_Two = 5
+sensor_Two = 5
 
 # Setting GPIO Pins to Input
 GPIO.setup(sensor_One, GPIO.IN)
-#GPIO.setup(sensor_Two, GPIO.IN)
+GPIO.setup(sensor_Two, GPIO.IN)
 
 #######PLACE HOLDER LOOP/COUNTER############
 RUNNING = True
-COUNTER = 0
 ####################################
 
 # SMTP sending info
-smtp_UN = "raspbpinotice@gmail.com"
+smtp_UN = "raspbpinotices@gmail.com"
 smtp_PW = "lelouch12"
 smtp_Host = "smtp.gmail.com"
 smtp_port = 465
 
-smtp_sender = "raspbpinotice@gmail.com"
-smtp_receiver = [ 'hahnfrankie@gmail.com', 'katieamenta@aol.com' ]
+smtp_sender = "raspbpinotices@gmail.com"
+smtp_receiver = [ 'hahnfrankie@gmail.com' ]
 
 # Messages
 
-needs_Water = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
+needs_WaterOne = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
 To: Caretakers <hahnfrankie@gmail.com, katieamenta@aol.com>
-Subject: WATER ME PLEASE
+Subject: Basil Needs Water
 
-I am so thirsty, please give me something to drink.
+Please....water....dying.....
 
 Regards,
-Your Plant
+Your Basil Plant
 """
 
-watered = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
+wateredOne = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
 To: Caretakers <hahnfrankie@gmail.com, katieamenta@aol.com>
 Subject: Thanks
 
-Thank you so much for the delicious water.
+Thanks for the water.
 
 Regards,
-Your Plant
+Your Basil Plant
+"""
+
+needs_WaterTwo = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
+To: Caretaker <hahnfrankie@gmail.com>
+Subject: Thyme Needs Water
+
+Please...water..dying....
+
+Regards,
+Your Thyme Plant
+"""
+
+wateredTwo = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
+To: Caretaker <hahnfrankie@gmail.com>
+Subject: Thanks
+
+Thanks for the water.
+
+Regards,
+Your Thyme Plant
 """
 
 # email function
 
-def sendEmail(smtp_variable):
+def sendEmail(smtp_message):
     try:
         smtpObj = smtplib.SMTP_SSL(smtp_Host, smtp_port)
         smtpObj.login(smtp_UN, smtp_PW)
@@ -66,39 +85,34 @@ def sendEmail(smtp_variable):
 
 # GPIO input check function, will be called everytime GPIO is called
 
-def GPIOcheck_One(channel, COUNTER):
+def GPIOcheck_One(channel):
     if GPIO.input(channel):
-        print "Plant Status: Dehydrated"
-        sendEmail(needs_Water)
-        COUNTER += 1
+        print "Plant One Status: Dehydrated"
+        sendEmail(needs_WaterOne)
+	print(time.ctime())
     else:
-        print "Plant Status: Hydrated"
-        sendEmail(watered)
-        COUNTER += 1
+        print "Plant One Status: Hydrated"
+        sendEmail(wateredOne)
+	print(time.ctime())
 
-def GPIOcheck_Two(channel, COUNTER):
+def GPIOcheck_Two(channel):
     if GPIO.input(channel):
         print "Plant Two Status: Dehydrated"
-        sendEmail(needs_Water)
-        COUNTER += 1
+        sendEmail(needs_WaterTwo)
+	print(time.ctime())
     else:
         print "Plant Two Status: Hydrated"
-        sendEmail(Watered)
-        COUNTER += 1
+        sendEmail(wateredTwo)
+	print(time.ctime())
 
-while RUNNING == True
+# Detects when change in voltage occurs
+GPIO.add_event_detect(sensor_One, GPIO.BOTH, bouncetime=200)
+GPIO.add_event_detect(sensor_Two, GPIO.BOTH, bouncetime=400)
 
-    if COUNTER > 3:
-        Print("Maximum Checks have occured, please try again tomorrow")
+# Executes check functions when change in respective pin occurs
+GPIO.add_event_callback(sensor_One, GPIOcheck_One)
+GPIO.add_event_callback(sensor_Two, GPIOcheck_Two)
 
-    else:
-        # Detects when change in voltage occurs
-        GPIO.add_event_detect(sensor_One, GPIO.BOTH, bouncetime=200)
-        #GPIO.add_event_detect(sensor_Two, GPIO.BOTH, bouncetime=600)
-
-        # Executes check functions when change in respective pin occurs
-        GPIOP.add_event_callback(sensor_One, GPIOcheck_One)
-        #GPIOP.add_event_callback(sensor_Two, GPIOcheck_Two)
-
-    
-
+# Loop that keeps script running
+while RUNNING == True:
+	time.sleep(0.2)
