@@ -22,18 +22,18 @@ RUNNING = True
 ####################################
 
 # SMTP sending info
-smtp_UN = "raspbpinotices@gmail.com"
-smtp_PW = "lelouch12"
+smtp_UN = "email"
+smtp_PW = "password"
 smtp_Host = "smtp.gmail.com"
 smtp_port = 465
 
-smtp_sender = "raspbpinotices@gmail.com"
-smtp_receiver = [ 'hahnfrankie@gmail.com' ]
+smtp_sender = "email"
+smtp_receiver = [ 'email' ]
 
 # Messages
 
 needs_WaterOne = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
-To: Caretakers <hahnfrankie@gmail.com, katieamenta@aol.com>
+To: Caretakers <.
 Subject: Basil Needs Water
 
 Please....water....dying.....
@@ -43,7 +43,7 @@ Your Basil Plant
 """
 
 wateredOne = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
-To: Caretakers <hahnfrankie@gmail.com, katieamenta@aol.com>
+To: Caretakers <>
 Subject: Thanks
 
 Thanks for the water.
@@ -53,7 +53,7 @@ Your Basil Plant
 """
 
 needs_WaterTwo = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
-To: Caretaker <hahnfrankie@gmail.com>
+To: Caretaker <>
 Subject: Thyme Needs Water
 
 Please...water..dying....
@@ -63,7 +63,7 @@ Your Thyme Plant
 """
 
 wateredTwo = """From: Your Friendly Neighborhood Pi <raspbpinotice@gmail.com>
-To: Caretaker <hahnfrankie@gmail.com>
+To: Caretaker <>
 Subject: Thanks
 
 Thanks for the water.
